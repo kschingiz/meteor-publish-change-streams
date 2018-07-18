@@ -1,8 +1,8 @@
 # meteor-publish-change-streams
 
-This allow you to reactively subscribe and publish to mongo change streams
+This package allow you to reactively subscribe and publish mongo change streams
 
-# REQUIREMENTS
+# requirements
 
 1.  Meteor 1.7+
 2.  Mongo 3.6+
