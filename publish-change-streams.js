@@ -26,10 +26,13 @@ PublishChangeStream.prototype.startChangeStream = async function() {
     this.stream = rawCollection.watch(this.pipeline || []);
 
     this.stream.on("change", doc => {
-      console.log(doc);
-
       const { fullDocument, operationType } = doc;
-      const _id = doc.documentKey._id.toHexString();
+
+      let docId = doc.documentKey._id;
+
+      if (typeof docId === "object") {
+        docId = docId.toHexString();
+      }
 
       delete fullDocument._id;
 
@@ -37,21 +40,20 @@ PublishChangeStream.prototype.startChangeStream = async function() {
 
       try {
         isDocExist =
-          this.sub._documents[this.collection._name][`-${_id}`] || false;
+          this.sub._documents[this.collection._name][`-${docId}`] || false;
       } catch (e) {
         isDocExist = false;
       }
 
       if (isDocExist) {
         if (operationType === "replace") {
-          console.log("changed", this.collection._name, _id, fullDocument);
-          this.sub.changed(this.collection._name, _id, fullDocument);
+          this.sub.changed(this.collection._name, docId, fullDocument);
+        } else if (operationType === "delete") {
+          this.sub.removed(this.collection._name, docId, fullDocument);
         }
       } else {
         if (operationType === "replace" || operationType === "insert") {
-          console.log("added", this.collection._name, _id, fullDocument);
-
-          this.sub.added(this.collection._name, _id, fullDocument);
+          this.sub.added(this.collection._name, docId, fullDocument);
         }
       }
     });
