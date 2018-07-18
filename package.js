@@ -1,6 +1,6 @@
 Package.describe({
   name: "kschingiz:publish-change-streams",
-  version: "0.0.3",
+  version: "0.0.4",
   // Brief, one-line summary of the package.
   summary:
     "This package allow you to reactively subscribe and publish mongo change streams",
